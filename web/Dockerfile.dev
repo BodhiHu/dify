@@ -1,0 +1,28 @@
+# base image
+FROM node:20.11-alpine3.19
+LABEL maintainer="takatost@gmail.com"
+
+RUN apk add --no-cache tzdata
+
+WORKDIR /app/web
+
+COPY . .
+
+ENV NODE_ENV development
+ENV EDITION SELF_HOSTED
+ENV DEPLOY_ENV DEVELOPMENT
+ENV CONSOLE_API_URL http://127.0.0.1:5001
+ENV APP_API_URL http://127.0.0.1:5001
+ENV PORT 3000
+
+# set timezone
+ENV TZ UTC
+RUN ln -s /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone
+
+# if you located in the MiddleLand.中土, you can use taobao registry to speed up
+# RUN yarn install --registry https://registry.npm.taobao.org/
+RUN yarn install --registry https://registry.npm.taobao.org/
+
+EXPOSE 3000
+CMD ["yarn", "dev"]

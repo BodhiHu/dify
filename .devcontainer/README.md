@@ -16,6 +16,18 @@ if you have VS Code installed, you can click the button above to open this proje
 
 You can learn more in the [Dev Containers documentation](https://code.visualstudio.com/docs/devcontainers/containers).
 
+### Start services
+
+Start DB/Redis/Memory .etc:
+```
+cd docker
+docker-compose -f docker-compose.middleware.yaml up -d
+```
+
+Start dify servers:
+```
+docker-compose -f docker-compose.dev.yaml up -d
+```
 
 ## Pros of Devcontainer
 Unified Development Environment: By using devcontainers, you can ensure that all developers are developing in the same environment, reducing the occurrence of "it works on my machine" type of issues.

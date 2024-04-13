@@ -1,0 +1,34 @@
+# base image
+FROM python:3.10-slim-bookworm
+
+LABEL maintainer="takatost@gmail.com"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc g++ libc-dev libffi-dev libgmp-dev libmpfr-dev libmpc-dev curl wget vim nodejs ffmpeg
+
+WORKDIR /app/api
+
+COPY . .
+
+ENV FLASK_APP app.py
+ENV EDITION SELF_HOSTED
+ENV DEPLOY_ENV DEVELOPMENT
+ENV CONSOLE_API_URL http://127.0.0.1:5001
+ENV CONSOLE_WEB_URL http://127.0.0.1:3000
+ENV SERVICE_API_URL http://127.0.0.1:5001
+ENV APP_WEB_URL http://127.0.0.1:3000
+
+# set timezone
+ENV TZ UTC
+
+RUN pip install -r requirements.txt
+
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ARG COMMIT_SHA
+ENV COMMIT_SHA ${COMMIT_SHA}
+
+EXPOSE 5001
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
